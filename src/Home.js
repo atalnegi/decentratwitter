@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Form, Button, Card, ListGroup } from 'react-bootstrap'
-import { create as ipfsHttpClient } from 'ipfs-http-client'
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
+import { Row, Form, Button, Card } from 'react-bootstrap'
+import axios from 'axios';
 
 const Home = ({ contract }) => {
     const [posts, setPosts] = useState('')
@@ -23,7 +22,7 @@ const Home = ({ contract }) => {
         // Fetch metadata of each post and add that to post object.
         let posts = await Promise.all(results.map(async i => {
             // use hash to fetch the post's metadata stored on ipfs 
-            let response = await fetch(`https://ipfs.infura.io/ipfs/${i.hash}`)
+            let response = await fetch(i.hash)
             const metadataPost = await response.json()
             // get authors nft profile
             const nftId = await contract.profiles(i.author)
@@ -62,9 +61,21 @@ const Home = ({ contract }) => {
         let hash
         // Upload post to IPFS
         try {
-            const result = await client.add(JSON.stringify({ post }))
+            const resJSON = await axios({
+                method: "post",
+                url: "https://api.pinata.cloud/pinning/pinJsonToIPFS",
+                data: {
+                  "post":post
+                },
+                headers: {
+                  'pinata_api_key': process.env.REACT_APP_PINATA_API_KEY,
+                  'pinata_secret_api_key': process.env.REACT_APP_PINATA_SECRET_API_KEY,
+        
+                },
+              });
             setLoading(true)
-            hash = result.path
+            hash = `https://gateway.pinata.cloud/ipfs/${resJSON.data.IpfsHash}`;
+
         } catch (error) {
             window.alert("ipfs image upload error: ", error)
         }
