@@ -13,8 +13,8 @@
 - Install [NodeJS](https://nodejs.org/en/), should work with any node version below 16.5.0
 - Install [Hardhat](https://hardhat.org/)
 - Create an account [Pinata](https://www.pinata.cloud/) Generate a new API_KEY along with a SECRET_KEY. Create a file as ".env" in the     same folder and store both the details as:
-  REACT_APP_PINATA_API_KEY="your api key"
-  REACT_APP_PINATA_API_SECRET="your secret key"
+  `REACT_APP_PINATA_API_KEY="your api key"`
+  `REACT_APP_PINATA_API_SECRET="your secret key"`
 
 ## Setting Up
 ### 1. Clone/Download the Repository
